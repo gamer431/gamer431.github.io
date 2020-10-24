@@ -1,0 +1,1 @@
+window.IMAGES = 7;
