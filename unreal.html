@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>UNREAL</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="images/count.js"></script>
+    <script>(function(factory){if(typeof exports==="object"){factory(require("jquery"))}else if(typeof define==="function"&&define.amd){define(["jquery"],factory)}else{factory(jQuery)}})(function($){$.extend({bez:function(encodedFuncName,coOrdArray){if($.isArray(encodedFuncName)){coOrdArray=encodedFuncName;encodedFuncName="bez_"+coOrdArray.join("_").replace(/\./g,"p")}if(typeof $.easing[encodedFuncName]!=="function"){var polyBez=function(p1,p2){var A=[null,null],B=[null,null],C=[null,null],bezCoOrd=function(t,ax){C[ax]=3*p1[ax],B[ax]=3*(p2[ax]-p1[ax])-C[ax],A[ax]=1-C[ax]-B[ax];return t*(C[ax]+t*(B[ax]+t*A[ax]))},xDeriv=function(t){return C[0]+t*(2*B[0]+3*A[0]*t)},xForT=function(t){var x=t,i=0,z;while(++i<14){z=bezCoOrd(x,0)-t;if(Math.abs(z)<.001)break;x-=z/xDeriv(x)}return x};return function(t){return bezCoOrd(xForT(t),1)}};$.easing[encodedFuncName]=function(x,t,b,c,d){return c*polyBez([coOrdArray[0],coOrdArray[1]],[coOrdArray[2],coOrdArray[3]])(t/d)+b}}return encodedFuncName}})});;</script>
+    <script>
+        $.fn.animateRotate = function(startAngle, endAngle, duration, easing, complete){
+    return this.each(function(){
+        var elem = $(this);
+
+        $({deg: startAngle}).animate({deg: endAngle}, {
+            duration: duration,
+            easing: easing,
+            step: function(now){
+                elem.css({
+                  '-moz-transform':'rotate('+now+'deg)',
+                  '-webkit-transform':'rotate('+now+'deg)',
+                  '-o-transform':'rotate('+now+'deg)',
+                  '-ms-transform':'rotate('+now+'deg)',
+                  'transform':'rotate('+now+'deg)'
+                });
+            },
+            complete: complete || $.noop
+        });
+    });
+};</script>
+	<style>
+		body {
+			background-color: #00000f;
+		}
+		#popup {
+
+		  display: block;
+		  margin: 0;
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  -ms-transform: translate(-50%, -50%);
+		  transform: translate(-50%, -50%);
+		  box-shadow: 0 4px 8px 0 rgba(1, 1, 1, 0.2), 0 6px 20px 0 rgba(1, 1, 1, 0.19);
+		  animation: modal 1s;
+		  animation-timing-function: cubic-bezier(.49,1.02,.48,1.04);
+		}
+		.center {
+			display:block;
+			margin: auto;
+		  	width: 20em;
+		}
+
+		#arrow {
+			  position: absolute;
+			  top: 50%;
+			  left:100%;
+			  -ms-transform: translate(-100%, -50%);
+			  transform: translate(-100%, -50%);
+			border: 0px;
+			background-image: url("arrow.png");
+			width:100px;
+			height:100px;
+		}
+		#arrow:active {
+			margin: 1px 1px 0 0;
+			background-image: url("arrow2.png");
+		}
+        #caption {
+            color:rgb(215,189,115);
+            font-family: "/IOStyle.ttc";
+            text-align:center;
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+		.img {
+			position:absolute;
+
+			height:500px;
+			width:500px;
+
+		  left: 50%;
+		  top: 60%;
+		  -ms-transform: translate(-50%, -50%);
+		  transform: translate(-50%, -50%);
+		}
+
+
+		@keyframes modal {
+			0% {opacity:0;width:0%;height:0%;visibility:hidden;}
+			60% {opacity:0;width:0%;height:0%;visibility:hidden;filter: blur(8px);}
+			100% {opacity:1.0;width:42.813em;height:18.063em;visibility:visible;filter: blur(0px);}
+		}
+		@keyframes reversemodal {
+			0% {opacity:1.0;width:42.813em;height:18.063em;visibility:visible;filter: blur(0px);}
+			60% {opacity:0;width:0%;height:0%;visibility:hidden;filter: blur(8px);}
+			100% {opacity:0;width:0%;height:0%;visibility:hidden;}
+		}
+
+        @keyframes glow {
+          from {
+            text-shadow: 0 0 10px #555, 0 0 20px #555, 0 0 30px rgb(43,37,40), 0 0 40px rgb(43,37,40), 0 0 50px rgb(43,37,40), 0 0 60px rgb(43,37,40), 0 0 70px rgb(43,37,40);
+          }
+          to {
+            text-shadow: 0 0 20px #fff, 0 0 30px #00000f, 0 0 40px #00000f, 0 0 50px #00000f, 0 0 60px #00000f, 0 0 70px #00000f, 0 0 80px #00000f;
+          }
+        }
+	</style>
+
+	<script>
+		function makeVis() {
+            window.index++;
+            for(var i=0;i<window.IMAGES;i++) {
+                if(i==window.index) {
+                    window.images[i].style.visibility = 'visible';
+                } else {
+                    window.images[i].style.visibility = 'hidden';
+                }
+            }
+            if(window.index==window.IMAGES) {
+                $('#caption').fadeIn(2000);
+                window.setTimeout(_=>{
+                    $('#arrow').animate({
+                        top:'200%',
+                        left:'50%'
+                    },3000, $.bez([.56,.14,.8,.36]));
+                    $('#arrow').animateRotate(0,-360,2000,0,0);
+                },2000);
+            } else {
+                (new Audio("beep.wav")).play();
+            }
+		}
+
+		window.images = [];
+		window.index = 0;
+        $('body').ready(function() { 
+         	
+
+         	for(var i=1;i<window.IMAGES+1;i++) {
+         		var img = new Image();
+         		img.src = `images/${i}.jpg`;
+         		img.style.visibility = 'hidden';
+         		img.className = "img";
+
+         		window.images.push(img);
+         		document.querySelector("#imgcontainer").appendChild(img);
+         	}
+         	var aud = new Audio("basso.wav");
+         	$(window).keypress(()=>{
+         	aud.play();
+         	});
+
+         	$('#arrow').hide();
+         	$('#caption').hide();
+
+			$('#popup').click(()=>{
+	         	$('#popup').fadeOut(2000,_=>{
+	         		window.images[0].style.visibility = "visible";
+	         	});
+				$('#arrow').fadeIn(2000);
+	         });
+	    });
+	</script>
+</head>
+<body>
+	<img src="logo.png" class="center" />
+	<img src="pop up.png" id="popup"/>
+
+	<div id="imgcontainer"></div>
+	<button onclick="makeVis()" id="arrow"></button>
+	<h1 id="caption" class="center">Do you know this person? No you don't! They were artificially generated</h1>
+</body>
+</html>
